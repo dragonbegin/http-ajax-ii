@@ -50,12 +50,11 @@ lowdb(adapter)
       }
 
       const id = db.get("count").value() + 1
-      const newItem = { id, name, price, imageUrl, description, shipping }
     
       db.set("count", id).write()
-      db.get("items").push(newItem).write()
+      db.get("items").push({ id, name, price, imageUrl, description, shipping }).write()
 
-      res.json(newItem)
+      res.json(db.get("items").value())
     })
     
     server.put("/items/:id", (req, res) => {
@@ -84,7 +83,7 @@ lowdb(adapter)
       }
 
       db.get("items").remove({ id }).write()
-      res.status(200).json(db.get("items").value())
+      res.json(db.get("items").value())
     })
 
     return db.defaults({ count: 0, items: [] }).write()
